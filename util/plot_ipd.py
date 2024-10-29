@@ -37,7 +37,9 @@ def plot_iterated_prisoners_dilemma(
     total_node_name: Callable[[int], str] = "t_{}".format
     total: float = 0
     history_colors: List[str] = []
-    SENTENCE_COLOR_MAP = plt.cm.RdYlGn(np.linspace(0, 1, len(PrisonersDilemma.PAYOFF) + 1))
+    SENTENCE_COLOR_MAP = plt.cm.RdYlGn(
+        np.linspace(0, 1, len(PrisonersDilemma.PAYOFF) + 1)
+    )
     sentence_colors: List[str] = []
     total_colors: List[str] = []
     total_max: float = sum([sum(_) for _ in sentences])
@@ -105,7 +107,9 @@ def plot_iterated_prisoners_dilemma(
     for key, value in label_data.items():
         label_data[key] = "{}".format(value["action"])
 
-    nx.draw_networkx_labels(graph, positions, label_data, font_size=6, font_type="bold")
+    nx.draw_networkx_labels(
+        graph, positions, label_data, font_size=6, font_weight="bold"
+    )
     plt.title("Iterated Prisoners Dilemma")
     ax.get_xaxis().set_visible(False)
     ax.get_yaxis().set_visible(False)
@@ -113,9 +117,10 @@ def plot_iterated_prisoners_dilemma(
     plt.savefig(os.path.join(out_path, "{}".format(name)))
 
 
-def get_position(x: float, data: List[Any], positions: Dict[str, Tuple[float, float]]) -> None:
-    """Helper for assigning x, y position
-    """
+def get_position(
+    x: float, data: List[Any], positions: Dict[str, Tuple[float, float]]
+) -> None:
+    """Helper for assigning x, y position"""
     ys: List[float] = [_ for _ in np.linspace(0, 0.9, num=len(data))]
     for i, node in enumerate(data):
         positions[node] = (x, ys[i])
@@ -133,7 +138,9 @@ def get_history_color(choice: str) -> str:
     return _color
 
 
-def plot_ipd_from_file(in_file_name: str, out_path: str = ".", name: str = "ipd_test.pdf") -> None:
+def plot_ipd_from_file(
+    in_file_name: str, out_path: str = ".", name: str = "ipd_test.pdf"
+) -> None:
     """Plot from a Prisoners Dilemma statistics file"""
     with open(in_file_name, "r") as in_file:
         json_data = json.load(in_file)
@@ -141,5 +148,8 @@ def plot_ipd_from_file(in_file_name: str, out_path: str = ".", name: str = "ipd_
     for i, data in enumerate(json_data):
         _name = "{}_{}".format(i, name)
         plot_iterated_prisoners_dilemma(
-            histories=data["history"], sentences=data["payoffs"], out_path=out_path, name=_name
+            histories=data["history"],
+            sentences=data["payoffs"],
+            out_path=out_path,
+            name=_name,
         )

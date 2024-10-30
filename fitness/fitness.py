@@ -145,7 +145,7 @@ class IteratedPrisonersDilemma(FitnessFunction):
         """ Initialize object
         """
         self.n_iterations = param["n_iterations"]
-        self.prisoners_dilemma = PrisonersDilemma(self.n_iterations)
+        self.prisoners_dilemma = PrisonersDilemma(self.n_iterations)    
         self.opponent = eval(param["opponent"])  # pylint: disable=eval-used
         self.player = lambda x, y: ""
 

@@ -13,6 +13,11 @@ import json
 
 from util.utils import import_function
 
+# Lark library imports 
+from lark import Lark
+from lark.grammar import NonTerminal, Terminal, Rule
+from lark.lexer import TerminalDef# Updated grammar with a "NUMBER" placeholder for numbers
+
 
 __author__ = "Erik Hemberg"
 
@@ -190,6 +195,16 @@ class Grammar(object):
             str_output: str = "".join(output)
             return str_output, used_input
 
+class LarkGrammar(Grammar):
+    """
+    Lark Context Free Grammar.
+    """
+    
+    def __init__(self, file_name: str):
+        """Initialize LarkGrammar with a lark grammar file."""
+        super().__init__(file_name)
+        #self.lark_parser = None  
+        #self._initialize_lark_parser()
 
 class Individual(object):
     """A GE individual

@@ -9,33 +9,18 @@ from pathlib import Path
 import random
 from lark import Lark
 from lark.grammar import NonTerminal, Terminal, Rule
-from lark.lexer import TerminalDef
-
-# Updated grammar with a "NUMBER" placeholder for numbers
- 
-grammar_str = """
-rules: trade
-     | rules trade
-
-trade: "Trade(" person "," person "," xvalue "," yvalue ")"
-
-person: "Alice" | "Bob" | "Charles"
-xvalue: "Xvalue(" number ")"
-yvalue: "Yvalue(" number ")"
-
-number: "NUMBER"
-"""
+from lark.lexer import TerminalDef# Updated grammar with a "NUMBER" placeholder for numbers
 
 # Functions
 
 ## Function to import the lark grammar 
-def read_bnf_file(file_name: str) -> None:
+def read_lark_file(file_name: str) -> None:
     """Read a grammar file in lark format. Wrapper for file reading.
 
     :param file_name: lark grammar file
     :type file_name: str
     """
-    assert file_name.endswith(".lark")
+    #assert file_name.endswith(".lark")
 
     # Read the grammar file
     with open(file_name, "r") as in_file:
@@ -231,11 +216,11 @@ def generate_sentence_from_grammar(inputs: List[int], parser: "Lark") -> str:
 
 
 # Import the grammar 
-grammar_dir = "/home/germankux/Documents/MIT/RA/GSF/donkey_ge_lark_fork/tests/grammars/lark_grammars"
+grammar_dir = Path("/home/germankux/Documents/MIT/RA/GSF/donkey_ge_lark_fork/tests/grammars/lark_grammars")
 
 grammar_file = grammar_dir / "simple_trade_grammar.lark"
 
-read_bnf_file(grammar_file)
+grammar_str = read_lark_file(grammar_file)
 
 # Create Lark object
 parser = get_parser_from_bnf_string(grammar_str)
@@ -251,33 +236,8 @@ inputs_two_trades = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] # 16 intege
 # Three Trades
 inputs_three_trades = [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] # 24 integers
 
-# Updated Inputs List
-# =============================================================================
-# inputs_three_trades = [
-#     1, 1, 0,     # `rules` decisions
-#     0,           # `trade`
-#     0, 0,        # First `trade` `person`s
-#     0,           # `xvalue`
-#     0,           # `number` in `xvalue`
-#     0,           # `yvalue`
-#     0,           # `number` in `yvalue`
-#     0,           # `trade`
-#     0, 0,        # Second `trade` `person`s
-#     0,           # `xvalue`
-#     0,           # `number` in `xvalue`
-#     0,           # `yvalue`
-#     0,           # `number` in `yvalue`
-#     0,           # `trade`
-#     0, 0,        # Third `trade` `person`s
-#     0,           # `xvalue`
-#     0,           # `number` in `xvalue`
-#     0,           # `yvalue`
-#     0            # `number` in `yvalue`
-# ]
-# =============================================================================
-
 # Generate Sentence of Trades given the integer list of 
-sentence = generate_sentence_from_grammar(inputs_three_trades , parser)
+sentence = generate_sentence_from_grammar(inputs_one_trade, parser)
 print(sentence)
 
 

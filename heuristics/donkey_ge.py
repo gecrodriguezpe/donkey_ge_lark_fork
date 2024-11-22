@@ -25,6 +25,7 @@ __author__ = "Erik Hemberg"
 
 """
 
+# TODO: Rearrange the order of the classe, so they make logical sense
 
 class Grammar(object):
     """
@@ -179,7 +180,7 @@ class Grammar(object):
                 production_choices = self.rules[current_symbol[0]]
                 # Select a production
                 current_production = inputs[used_input] % len(production_choices)
-                # Use an inputs if there was more then 1 choice
+                # Use an inputs if there was more than 1 choice
                 if len(production_choices) > 1:
                     used_input += 1
 
@@ -232,7 +233,9 @@ class Individual(object):
         if genome is None:
             self.genome: List[int] = [
                 random.randint(0, Individual.codon_size) for _ in range(Individual.max_length)
+                #0 for _ in range(Individual.max_length)
             ]
+            #self.genome = [867, 821, 782, 64, 261, 120, 507, 779, 460, 483]
         else:
             self.genome = genome
 
@@ -321,6 +324,7 @@ def map_input_with_grammar(individual: Individual, grammar: Grammar) -> Individu
     return individual
 
 
+# TODO Transform into an actual python abstract class using the abc module
 class FitnessFunction(object):
     """
     Fitness function abstract class
@@ -345,7 +349,7 @@ def evaluate(
     :rtype: Individual
     """
 
-    individual.fitness = fitness_function(individual.phenotype, cache)
+    individual.fitness = fitness_function(individual.phenotype, cache) # Cuando se evalua el fenotipo del individuo en la función a optimizar (maximizar)
 
     assert individual.fitness is not None
 
@@ -362,7 +366,7 @@ def initialise_population(size: int) -> List[Individual]:
     """
     assert size > 0
 
-    individuals = [Individual(None) for _ in range(size)]
+    individuals = [Individual(None) for _ in range(size)] # El genoma de los individuos se generara de manera aleatoria, dado que se específico el valor None a la hora de hacer la inicialización
 
     return individuals
 
@@ -391,9 +395,9 @@ def evaluate_fitness(
     n_individuals = len(individuals)
     # Iterate over all the individual solutions
     for ind in individuals:
-        map_input_with_grammar(ind, grammar)
+        map_input_with_grammar(ind, grammar) # Calculate both ind.phenotype and ind.used_input 
         # Execute the fitness function
-        evaluate(ind, fitness_function, cache)
+        evaluate(ind, fitness_function, cache) # Calculate the fitness of ind.phenotype (i.e. ind.fitness)
 
     assert n_individuals == len(individuals), "{} != {}".format(n_individuals, len(individuals))
 
@@ -402,7 +406,7 @@ def evaluate_fitness(
 
 def variation(parents: List[Individual], param: Dict[str, Any]) -> List[Individual]:
     """
-    Vary individual solutions with crossover and mutation oeprations. Drive the
+    Vary individual solutions with crossover and mutation operations. Drive the
     search by generating variation of the parent solutions.
 
     :param parents: Collection of individual solutions
@@ -457,25 +461,26 @@ def search_loop(population: Population, param: Dict[str, Any]) -> Individual:
 
     """
 
+    # Defines param["cache"] and initialize the variable stats
     start_time = time.time()
-    param["cache"] = collections.OrderedDict()
-    stats: DefaultDict[str, List[Number]] = collections.defaultdict(list)
+    param["cache"] = collections.OrderedDict() # Intialize and empty OrderedDict()
+    stats: DefaultDict[str, List[Number]] = collections.defaultdict(list) # Intialize and empty defaultdict with a  "list factory function"
 
     ######################
-    # Evaluate fitness
+    # Evaluate fitness for the first generation (generation 0)
     ######################
     population.individuals = evaluate_fitness(
         population.individuals, population.grammar, population.fitness_function, param
     )
     # Set best solution
     population.individuals = sort_population(population.individuals)
-    best_ever = population.individuals[0]
+    best_ever = population.individuals[0] # The best individual in the original (first) generation 
 
     # Print the stats of the populations
     print_stats(0, population.individuals, stats, start_time)
 
     ######################
-    # Generation loop
+    # Generation loop: Evaluate fitness for the following (child generations)
     ######################
     generation = 1
     while generation < param["generations"]:
@@ -484,6 +489,8 @@ def search_loop(population: Population, param: Dict[str, Any]) -> Individual:
         ##################
         # Selection
         ##################
+        
+        # tournament_selection basicamente es un remuestreo de "population.individuals" con un sesgo hacia los mejores individuos de la generación para que sean los padres de la nueva generación
         parents = tournament_selection(
             population.individuals, param["population_size"], param["tournament_size"]
         )
@@ -491,6 +498,7 @@ def search_loop(population: Population, param: Dict[str, Any]) -> Individual:
         ##################
         # Variation. Generate new individual solutions
         ##################
+        # Donde se generan la nueva generación a través de crossover y mutación
         new_individuals = variation(parents, param)
 
         ##################
@@ -938,7 +946,7 @@ def run(param: Dict[str, Any]) -> Individual:
     print("Setting random seed: {} {:.5f}".format(param["seed"], random.random()))
 
     # Print settings
-    print("donkey_ge settings:", param)
+    #print("donkey_ge settings:", param)
 
     assert param["population_size"] > 1
     assert param["generations"] > 0
@@ -967,7 +975,7 @@ def run(param: Dict[str, Any]) -> Individual:
     ###########################
     # Evolutionary search
     ###########################
-    best_ever = search_loop(population, param)
+    best_ever = search_loop(population, param) # This is the important part, where the actual evolutionary algorithm takes place
 
     # Display results
     print("Time: {:.3f} Best solution:{}".format(time.time() - start_time, best_ever))
@@ -990,11 +998,10 @@ def get_fitness_function(param: Dict[str, str]) -> FitnessFunction:
     """
 
     name = param["name"]
-    fitness_function_method = import_function(name)
-    fitness_function = fitness_function_method(param)
+    fitness_function_method = import_function(name) # Returns a class and saves the class in the variable "fitness_function_method"
+    fitness_function = fitness_function_method(param) # Returns (Instantiate) an object of the the class save in "fitness_function_method" variable and saves the instantiated object in "fitness_function"
 
     return fitness_function
-
 
 if __name__ == "__main__":
     ARGS = parse_arguments()

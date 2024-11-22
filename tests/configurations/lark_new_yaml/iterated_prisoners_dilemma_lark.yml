@@ -13,4 +13,3 @@ fitness_function:
     name: "fitness.fitness.IteratedPrisonersDilemma"
     opponent: "lambda h, i: 'C'"
     n_iterations: 4
-iterated_prisoners_dilemma.yml

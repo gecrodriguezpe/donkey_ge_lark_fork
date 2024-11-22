@@ -230,15 +230,6 @@ parser = get_parser_from_bnf_string(grammar_str)
 # One Trade 
 inputs_one_trade = [0, 0, 0, 0, 0, 0, 0, 0] # 8 integers
 
-# Two Trades
-inputs_two_trades = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] # 16 integers
-
-# Three Trades
-inputs_three_trades = [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] # 24 integers
-
-# Generate Sentence of Trades given the integer list of 
-sentence = generate_sentence_from_grammar(inputs_one_trade, parser)
-print(sentence)
 
 
 

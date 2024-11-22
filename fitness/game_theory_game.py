@@ -2,7 +2,7 @@ from typing import List, Dict, Tuple, Callable
 import json
 import inspect
 
-
+# TODO Define as an abstract base class
 class GameTheoryGame:
     """
     A game theoretic game
@@ -123,6 +123,7 @@ class PrisonersDilemma(GameTheoryGame):
     }
     DEFAULT_OUT_FILE: str = "ipd_stats.json"
 
+    # TODO It should be a @classmethod instead of an instance method. Should use get_payoff(cls) instead of get_payoff(self) and should use cls.PAYOFF
     def get_payoff(self) -> Dict[Tuple[str, str], Tuple[float, float]]:
         """Return payoff for each strategy combination."""
         return PrisonersDilemma.PAYOFF

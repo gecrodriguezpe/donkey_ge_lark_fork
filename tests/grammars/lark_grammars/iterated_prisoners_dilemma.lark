@@ -12,7 +12,7 @@ varying: "[" choice "," choice "," choice "," choice "]"
 cooperate: "C"
 defect: "D"
 
-adaptive: choice "if" "h" "[" "i" "]" "==" choice "else" choice
+adaptive: choice " " "if" " " "h" "[" "i" "]" " " "==" " " choice " " "else" " " choice
 
 choice: "C" | "D"
 
